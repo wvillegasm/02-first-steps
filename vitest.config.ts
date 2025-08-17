@@ -11,6 +11,16 @@ export default defineConfig({
     environment: 'jsdom',
     typecheck: fs.existsSync(tsconfigPath)
       ? { tsconfig: './tsconfig.test.json' }
-      : {},
+
+
+import { defineConfig } from 'vitest/config';
+
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    typecheck: { tsconfig: './tsconfig.test.json' },
   }
 })
