@@ -34,6 +34,7 @@ This is a React 19 + TypeScript + Vite educational project focused on learning R
 - Enable strict mode with `noUnusedLocals` and `noUnusedParameters`
 - Prefer explicit prop interfaces over inline types
 - Use React.FC type annotation: `export const Component: React.FC<Props> = ({ prop }) =>`
+- **Documentation**: All utility functions must have JSDoc comments with `@param`, `@returns`, `@throws`, and `@example` annotations for educational clarity
 
 ### CSS/Styling Approach
 
@@ -99,6 +100,7 @@ src/
 3. Implement guard clauses for edge cases (negative quantities, etc.)
 4. Prefer controlled components with explicit state management
 5. Use semantic HTML elements (`<section>`, `<button>`) for accessibility
+6. **Document all utility functions** with comprehensive JSDoc including examples and parameter descriptions
 
 ## AI Coding Instructions for Pull Request Generation
 
