@@ -32,13 +32,15 @@ describe('multiply operations', () => {
   test('multiply with zero', () => {
     expect(multiply(0, 3)).toBe(0);
   });
+});
 
-  test('division', () => {
+describe('division operations', () => {
+  test('division with positive numbers', () => {
     expect(division(6, 3)).toBe(2);
   });
 
   test('division with zero', () => {
     // Division by zero should throw an error
-    expect(() => division(6, 0)).toThrowError('Division by zero');
+    expect(() => division(6, 0)).toThrowError('Division by zero is not allowed.');
   });
 });
