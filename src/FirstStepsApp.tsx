@@ -19,6 +19,12 @@ export const FirstStepsApp = () => {
     );
   };
 
+  const handleDeleteItem = (name: string) => {
+    setProductItems((prevItems) =>
+      prevItems.filter((item) => item.name !== name)
+    );
+  };
+
   return (
     <>
       <UserCard name="Wilfredo" email="test@google.com" address="123 Main St" />
@@ -28,6 +34,7 @@ export const FirstStepsApp = () => {
           name={product.name}
           quantity={product.quantity}
           onQuantityChange={handleQuantityChange}
+          onDeleteItem={handleDeleteItem}
         />
       ))}
     </>

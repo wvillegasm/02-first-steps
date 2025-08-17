@@ -77,7 +77,7 @@ src/
 ### Educational Context
 
 - This is a learning project - prioritize clarity and optimization
-- Homework assignments in `homworks/` directory provide component requirements
+- Homework assignments in `homeworks/` directory provide component requirements
 - Components should demonstrate specific React concepts (state, props, event handling)
 
 ### ESLint Configuration
@@ -99,3 +99,35 @@ src/
 3. Implement guard clauses for edge cases (negative quantities, etc.)
 4. Prefer controlled components with explicit state management
 5. Use semantic HTML elements (`<section>`, `<button>`) for accessibility
+
+## AI Coding Instructions for Pull Request Generation
+
+### The Process
+
+The instructions outline a clear, two-step process:
+
+1.  **Analyze Branch Changes**: This is the discovery phase. The assistant is instructed to use a specific Git command (`git diff main...`) to compare the current branch with the `main` branch. This command identifies every single line of code that has been added, removed, or modified. The purpose is to gather all the raw data about the changes.
+
+2.  **Generate the Pull Request Description**: This is the reporting phase. After analyzing the changes, the assistant must format that information into a predefined template. This ensures that the context, details, and verification steps for the changes are presented in a structured way.
+
+3.  **File for Changes Report**: Create the changes report inside of the `changes/tracking-changes.md` file.
+
+---
+
+### The Pull Request Template
+
+1.  **File for Pull Request Description**: Create a new file in the `changes/` directory with a name that reflects the changes made (e.g., `changes/feature-xyz.md`).
+
+The template is broken down into several sections, each with a specific purpose:
+
+- **📝 Summary**: A high-level overview. This section answers the "why" behind the PR. It explains the purpose of the changes, linking them to a specific feature or bug fix (e.g., `Fixes #123`).
+
+- **💥 Breaking Changes**: A critical alert section. It forces the developer to declare if their changes might break other parts of the application, which is vital information for reviewers.
+
+- **✨ Changes Details**: The core of the report. This provides a file-by-file breakdown of what was changed and why. It allows reviewers to quickly understand the scope and logic of the modifications before diving into the code itself.
+
+- **🖼️ Screenshots / GIFs**: Visual evidence. For any changes that affect the user interface, this section provides visual proof of what the changes look like, which is often clearer than a text description.
+
+- **✅ Testing**: A quality assurance checklist. It confirms what kind of testing was performed to ensure the changes work correctly and don't introduce new bugs.
+
+- **👀 Reviewers**: A call to action. It suggests which team members should review the code, helping to streamline the review process.

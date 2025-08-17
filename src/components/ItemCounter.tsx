@@ -4,12 +4,14 @@ interface ItemCounterProps {
   name: string;
   quantity: number;
   onQuantityChange: (name: string, delta: number) => void;
+  onDeleteItem: (name: string) => void;
 }
 
 export const ItemCounter: React.FC<ItemCounterProps> = ({
   name,
   quantity,
   onQuantityChange,
+  onDeleteItem,
 }) => {
   const onHandleQuantity = (delta: number) => {
     // Handle quantity change logic here
@@ -38,7 +40,9 @@ export const ItemCounter: React.FC<ItemCounterProps> = ({
               +
             </button>
           </div>
-          <button className="delete-btn">Delete</button>
+          <button className="delete-btn" onClick={() => onDeleteItem(name)}>
+            Delete
+          </button>
         </div>
       </div>
     </section>
