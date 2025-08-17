@@ -1,0 +1,85 @@
+.item-row {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  gap: 1rem;
+  margin: 1rem 0; /* Only top/bottom margin */
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0; /* Match screenshot separator */
+  width: 100%; /* Take full width of parent */
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column; /* Stack name and controls */
+  flex-grow: 1;
+}
+
+.item-text {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.5rem; /* Space between name and controls */
+}
+
+.controls-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.quantity-btn {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  width: 25px;
+  height: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.quantity-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.quantity-btn:first-of-type {
+  border-right: 1px solid #ccc;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.quantity-btn:last-of-type {
+  border-left: 1px solid #ccc;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.quantity-display {
+  font-size: 1rem;
+  color: #333;
+  padding: 0 0.75rem; /* More space around number */
+  text-align: center;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.delete-btn:hover {
+  color: #0056b3;
+}
