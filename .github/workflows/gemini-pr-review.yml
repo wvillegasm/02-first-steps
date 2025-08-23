@@ -165,7 +165,9 @@ jobs:
 
           # Get file changes
           CHANGED_FILES="$(gh pr diff "${PR_NUMBER}" --name-only)"
-          {
+          ADDITIONAL_INSTRUCTIONS="$(
+            echo "${COMMENT_BODY}" | grep -o '@gemini-cli /review.*' | cut -d' ' -f3-
+          )"
             echo "changed_files<<EOF"
             echo "${CHANGED_FILES}"
             echo "EOF"
