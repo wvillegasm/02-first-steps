@@ -19,7 +19,8 @@ describe("FirstStepsApp", () => {
     expect(xboxItem).toBeInTheDocument();
 
     const xboxRow = screen.getByText("Xbox Series X").closest("section");
-    const deleteButton = within(xboxRow!).getByRole('button', { name: /delete/i });
+    if (!xboxRow) throw new Error('Could not find section for "Xbox Series X"');
+    const deleteButton = within(xboxRow).getByRole('button', { name: /delete/i });
     await user.click(deleteButton);
 
     expect(screen.queryByText("Xbox Series X")).not.toBeInTheDocument();
