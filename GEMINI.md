@@ -11,9 +11,9 @@ This project aims to provide a guide to learn React.js with TypeScript.
 
 ## Code Conventions
 
-- **Style:** Follow the ESLint rules defined in `eslint.config.js`.
+- **Style:** Follow ESLint rules from `eslint.config.js` and project formatting rules (e.g., Prettier). Code must pass lint/format checks before commit.
 - **Naming:** Components in PascalCase, hooks in camelCase with the `use` prefix.
-- **Commits:** [e.g., Use the Conventional Commits format: `feat(scope): description`.]
+- **Commits:** Use Conventional Commits format: `type(scope): description` (e.g., `feat(auth): add login route`).
 
 ## Architecture and Structure
 
@@ -25,7 +25,7 @@ This project aims to provide a guide to learn React.js with TypeScript.
 
 - Whenever a new business logic function is added to `src/helpers`, it must be accompanied by its corresponding test file.
 - Do not install new dependencies without explicit authorization.
-- Maintain compatibility with Node.js v20.
+- Maintain compatibility with Node.js v20 (e.g., 20.x). Use an `.nvmrc` and `engines` in `package.json` to enforce the Node version.
 
 ## Important Files
 
