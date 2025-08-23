@@ -45,12 +45,12 @@ describe("FirstStepsApp", () => {
   test("should decrease item quantity when '-' button is clicked", async () => {
     const user = userEvent.setup();
     render(<FirstStepsApp />);
-    
-    const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
-    const quantityDisplay = nintendoRow?.querySelector(".quantity-display");
-    const increaseButton = nintendoRow?.querySelector("button:last-of-type");
-    await user.click(increaseButton!)
-    await user.click(increaseButton!)
+    const nintendoRow = screen.getByRole('region', { name: /nintendo switch/i });
+    const increaseButton = within(nintendoRow).getByRole('button', { name: '+' });
+    await user.click(increaseButton);
+    await user.click(increaseButton);
+    const quantityDisplay = within(nintendoRow).getByText(/^\s*3\s*$/, { selector: '.quantity-display' });
+    expect(quantityDisplay).toBeInTheDocument();
     expect(quantityDisplay?.textContent).toBe("3");
 
     const decreaseButton = nintendoRow?.querySelector("button:first-of-type");
