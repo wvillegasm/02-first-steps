@@ -32,9 +32,10 @@ describe("FirstStepsApp", () => {
     const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
     expect(nintendoRow).not.toBeNull();
 
-    const quantityDisplay = within(nintendoRow as HTMLElement).getByText("1", { selector: '.quantity-display' });
     const increaseButton = within(nintendoRow as HTMLElement).getByRole('button', { name: '+' });
     await user.click(increaseButton);
+    const quantityDisplay = within(nintendoRow as HTMLElement).getByText("2", { selector: '.quantity-display' });
+    expect(quantityDisplay).toBeInTheDocument();
 
     expect(quantityDisplay?.textContent).toBe("2");
 
