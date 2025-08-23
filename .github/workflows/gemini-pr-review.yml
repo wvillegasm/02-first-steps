@@ -459,13 +459,15 @@ jobs:
               3.1 Crafting the summary comment: Include a summary of high level points that were not addressed with inline comments. Be concise. Do not repeat details mentioned inline.
 
                 Structure your summary comment using this exact format with markdown:
-                ## 📋 Review Summary
-
-                Provide a brief 2-3 sentence overview of the PR and overall
-                assessment.
-
-                ## 🔍 General Feedback
-                - List general observations about code quality
+    script: |-
+      const repo = '${{ github.repository }}'.split('/');
+      const prNumber = parseInt('${{ steps.get_pr.outputs.pr_number || steps.get_pr_comment.outputs.pr_number }}', 10);
+      await github.rest.issues.createComment({
+        owner: repo[0],
+        repo: repo[1],
+        issue_number: prNumber,
+        body: 'There is a problem with the Gemini CLI PR review. Please check the [action logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
+      });
                 - Mention overall patterns or architectural decisions
                 - Highlight positive aspects of the implementation
                 - Note any recurring themes across files
