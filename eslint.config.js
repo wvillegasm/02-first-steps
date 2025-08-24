@@ -30,6 +30,7 @@ export default tseslint.config([
           next: ['const', 'let', 'var'],
         },
       ],
+      'array-bracket-spacing': ['error', 'never'],
     },
   },
 ])
