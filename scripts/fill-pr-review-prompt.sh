@@ -17,7 +17,11 @@ if git ls-remote --exit-code origin develop >/dev/null 2>&1; then
   TARGET_BRANCH="develop"
 else
   TARGET_BRANCH="main"
-fi
+  BASE="$(git merge-base --fork-point HEAD origin/main 2>/dev/null)"
+  if [ -z "$BASE" ]; then
+    echo "Error: cannot determine a common ancestor with origin/main" >&2
+    exit 1
+  fi
 
 # Get the best common ancestor as the base for comparison
 BASE=$(git merge-base HEAD "origin/$TARGET_BRANCH" 2>/dev/null)
