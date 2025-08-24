@@ -5,25 +5,25 @@ set -euo pipefail
 # Output the repository prompt template then append local metadata (files, commits, diff, test/build snippets).
 # Usage: ./scripts/fill-pr-review-prompt.sh > prompt-for-copilot.txt
 
-# Determine a sensible base branch: prefer develop, then main, then origin/main, else use merge-base
+# Determine a sensible base branch: prefer develop, then main.
 BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
 if [ -z "$BRANCH" ]; then
   echo "Error: cannot determine current git branch" >&2
   exit 1
 fi
 
-if git show-ref --verify --quiet refs/heads/develop; then
-  BASE="develop"
-elif git show-ref --verify --quiet refs/heads/main; then
-  BASE="main"
-elif git ls-remote --exit-code origin main >/dev/null 2>&1; then
-  BASE="origin/main"
+# Check if develop branch exists on remote, otherwise default to main
+if git ls-remote --exit-code origin develop >/dev/null 2>&1; then
+  TARGET_BRANCH="develop"
 else
-  # fallback to common ancestor with origin/main or HEAD
-  BASE="$(git merge-base --fork-point HEAD origin/main 2>/dev/null || git merge-base --all HEAD HEAD)"
+  TARGET_BRANCH="main"
 fi
-if [ -z "$BRANCH" ]; then
-  echo "Error: cannot determine current git branch" >&2
+
+# Get the best common ancestor as the base for comparison
+BASE=$(git merge-base HEAD "origin/$TARGET_BRANCH" 2>/dev/null)
+
+if [ -z "$BASE" ]; then
+  echo "Error: cannot determine a merge base with 'origin/$TARGET_BRANCH'" >&2
   exit 1
 fi
 
