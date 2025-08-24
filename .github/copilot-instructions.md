@@ -42,6 +42,10 @@ This is a React 19 + TypeScript + Vite educational project focused on learning R
 - Use CSS classes with semantic naming (`.item-row`, `.quantity-controls`)
 - Inline styles for dynamic/computed values using CSSProperties type
 
+## Pull Request Review
+
+- Use file `.github/pr-reviewer-prompt.md` as a template for PR reviews.
+
 ## AI Coding Instructions — React First Steps (concise)
 
 This file gives a minimal, actionable guide for AI coding agents working on this learning repo. Focus on discoverable patterns and concrete examples.

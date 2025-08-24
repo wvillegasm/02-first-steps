@@ -3,7 +3,7 @@ Act as an expert _Pull Request_ (PR) reviewer for projects using React, JavaScri
 
 ### Source of Truth
 
-Follow **strictly** the standards defined in `.github/copilot-instructions.md`. When citing a rule:
+Follow **strictly** the standards defined in `copilot-instructions.md`. When citing a rule:
 
 - Reference the name/section/relevant rule and explain how it applies.
 - If there’s a conflict between personal style and the document, **`copilot-instructions.md` takes precedence**.
@@ -113,19 +113,45 @@ Do not give me any response yet, only validate that you understand the role assi
 ### CONTEXTO LOCAL (autogenerado)
 PR_URL: LOCAL_BRANCH:feature/fix-unit-testing-global
 PR_HEAD: feature/fix-unit-testing-global
-PR_BASE: main
+PR_BASE: 573c3f947d2646512dba1a8469e78e88f4d5cbb9
 
 ### FILES_CHANGED
+eslint.config.js
 src/FirstStepsApp.test.tsx
 src/MyAwesomeApp.test.tsx
 tsconfig.test.json
 
 ### COMMITS
+8e36208 Update src/FirstStepsApp.test.tsx
+f6d48d8 Merge branch 'main' of github.com:wvillegasm/02-first-steps into feature/fix-unit-testing-global
+03e166b Update unit testing configuration on Vite
 bbe0054  1 fix(test): include jest-dom types in tsconfig  2 Resolves an issue where TypeScript could not find the type definitions for `@testing-library/jest-dom` matchers like `toBeInTheDocument`.
 
 ### DIFF (truncated to 800 lines)
+diff --git a/eslint.config.js b/eslint.config.js
+index d94e7de..42e524e 100644
+--- a/eslint.config.js
++++ b/eslint.config.js
+@@ -19,5 +19,17 @@ export default tseslint.config([
+       ecmaVersion: 2020,
+       globals: globals.browser,
+     },
++    rules: {
++      'padding-line-between-statements': [
++        'error',
++        { blankLine: 'always', prev: '*', next: 'return' },
++        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
++        {
++          blankLine: 'any',
++          prev: ['const', 'let', 'var'],
++          next: ['const', 'let', 'var'],
++        },
++      ],
++    },
+   },
+ ])
 diff --git a/src/FirstStepsApp.test.tsx b/src/FirstStepsApp.test.tsx
-index 09f8d54..0e0a795 100644
+index 09f8d54..4b25bbe 100644
 --- a/src/FirstStepsApp.test.tsx
 +++ b/src/FirstStepsApp.test.tsx
 @@ -1,7 +1,6 @@
@@ -136,19 +162,37 @@ index 09f8d54..0e0a795 100644
  
  describe("FirstStepsApp", () => {
    test("should render all initial product items", () => {
-@@ -20,7 +19,9 @@ describe("FirstStepsApp", () => {
+@@ -13,14 +12,20 @@ describe("FirstStepsApp", () => {
+ 
+   test("should delete an item when delete button is clicked", async () => {
+     const user = userEvent.setup();
++
+     render(<FirstStepsApp />);
+ 
+     const xboxItem = screen.getByText("Xbox Series X");
++
+     expect(xboxItem).toBeInTheDocument();
  
      const xboxRow = screen.getByText("Xbox Series X").closest("section");
++
      if (!xboxRow) throw new Error('Could not find section for "Xbox Series X"');
 -    const deleteButton = within(xboxRow).getByRole('button', { name: /delete/i });
 +    const deleteButton = within(xboxRow).getByRole("button", {
 +      name: /delete/i,
 +    });
++
      await user.click(deleteButton);
  
      expect(screen.queryByText("Xbox Series X")).not.toBeInTheDocument();
-@@ -33,28 +34,38 @@ describe("FirstStepsApp", () => {
+@@ -28,48 +33,69 @@ describe("FirstStepsApp", () => {
+ 
+   test("should increase item quantity when '+' button is clicked", async () => {
+     const user = userEvent.setup();
++
+     render(<FirstStepsApp />);
+ 
      const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
++
      expect(nintendoRow).not.toBeNull();
  
 -    const increaseButton = within(nintendoRow as HTMLElement).getByRole('button', { name: '+' });
@@ -156,11 +200,13 @@ index 09f8d54..0e0a795 100644
 +      "button",
 +      { name: "+" }
 +    );
++
      await user.click(increaseButton);
 -    const quantityDisplay = within(nintendoRow as HTMLElement).getByText("2", { selector: '.quantity-display' });
 +    const quantityDisplay = within(nintendoRow as HTMLElement).getByText("2", {
 +      selector: ".quantity-display",
 +    });
++
      expect(quantityDisplay).toBeInTheDocument();
  
      expect(quantityDisplay?.textContent).toBe("2");
@@ -169,6 +215,7 @@ index 09f8d54..0e0a795 100644
  
    test("should decrease item quantity when '-' button is clicked", async () => {
      const user = userEvent.setup();
++
      render(<FirstStepsApp />);
 -    const nintendoRow = screen.getByRole('region', { name: /nintendo switch/i });
 -    const increaseButton = within(nintendoRow).getByRole('button', { name: '+' });
@@ -177,42 +224,48 @@ index 09f8d54..0e0a795 100644
 +    });
 +    const increaseButton = within(nintendoRow).getByRole("button", {
 +      name: "+",
-+    });
++    const decreaseButton = within(nintendoRow).getByRole("button", { name: "-" });
++    await user.click(decreaseButton);
      await user.click(increaseButton);
      await user.click(increaseButton);
 -    const quantityDisplay = within(nintendoRow).getByText(/^\s*3\s*$/, { selector: '.quantity-display' });
 +    const quantityDisplay = within(nintendoRow).getByText(/^\s*3\s*$/, {
 +      selector: ".quantity-display",
 +    });
++
      expect(quantityDisplay).toBeInTheDocument();
      expect(quantityDisplay?.textContent).toBe("3");
  
      const decreaseButton = nintendoRow?.querySelector("button:first-of-type");
 -    await user.click(decreaseButton!)
++
 +    await user.click(decreaseButton!);
  
      expect(quantityDisplay?.textContent).toBe("2");
    });
-@@ -62,14 +73,14 @@ describe("FirstStepsApp", () => {
+ 
    test("should not allow quantity to go below zero", async () => {
      const user = userEvent.setup();
++
      render(<FirstStepsApp />);
 -    
 +
      const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
      const quantityDisplay = nintendoRow?.querySelector(".quantity-display");
++
      expect(quantityDisplay?.textContent).toBe("1");
  
      const decreaseButton = nintendoRow?.querySelector("button:first-of-type");
 -    await user.click(decreaseButton!)
 -    await user.click(decreaseButton!)
++
 +    await user.click(decreaseButton!);
 +    await user.click(decreaseButton!);
  
      expect(quantityDisplay?.textContent).toBe("0");
    });
 diff --git a/src/MyAwesomeApp.test.tsx b/src/MyAwesomeApp.test.tsx
-index b4367a0..4e04547 100644
+index b4367a0..934f4fa 100644
 --- a/src/MyAwesomeApp.test.tsx
 +++ b/src/MyAwesomeApp.test.tsx
 @@ -1,6 +1,5 @@
@@ -222,6 +275,14 @@ index b4367a0..4e04547 100644
  
  describe("MyAwesomeApp", () => {
    test("should render the main title", () => {
+@@ -16,6 +15,7 @@ describe("MyAwesomeApp", () => {
+   test("should render the JSON object in a <pre> tag", () => {
+     render(<MyAwesomeApp />);
+     const preElement = screen.getByLabelText(/app data/i);
++
+     expect(preElement).toHaveTextContent(/"title":\s*"React Course"/);
+     expect(preElement).toHaveTextContent(/"subtitle":\s*"Devtalles"/);
+   });
 diff --git a/tsconfig.test.json b/tsconfig.test.json
 index 1c83d0e..708124e 100644
 --- a/tsconfig.test.json
@@ -244,14 +305,14 @@ index 1c83d0e..708124e 100644
 
  RUN  v3.2.4 /media/wilfredo/applications/proj/react/fh/2025-edition/02-first-steps
 
- ✓ src/helpers/math.helpers.test.ts (9 tests) 6ms
- ✓ src/MyAwesomeApp.test.tsx (3 tests) 73ms
- ✓ src/FirstStepsApp.test.tsx (5 tests) 236ms
+ ✓ src/helpers/math.helpers.test.ts (9 tests) 7ms
+ ✓ src/MyAwesomeApp.test.tsx (3 tests) 75ms
+ ✓ src/FirstStepsApp.test.tsx (5 tests) 223ms
 
  Test Files  3 passed (3)
       Tests  17 passed (17)
-   Start at  13:46:05
-   Duration  1.20s (transform 81ms, setup 214ms, collect 303ms, tests 314ms, environment 1.33s, prepare 306ms)
+   Start at  18:33:59
+   Duration  1.23s (transform 83ms, setup 221ms, collect 306ms, tests 305ms, environment 1.26s, prepare 317ms)
 
 ### BUILD OUTPUT (truncated)
 vite v7.1.1 building for production...
@@ -262,4 +323,4 @@ computing gzip size...
 dist/index.html                   0.46 kB │ gzip:  0.30 kB
 dist/assets/index-C93bPzab.css    1.28 kB │ gzip:  0.56 kB
 dist/assets/index-sGc_Wgyz.js   188.60 kB │ gzip: 59.41 kB
-✓ built in 810ms
+✓ built in 844ms

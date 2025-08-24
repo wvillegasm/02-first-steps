@@ -14,14 +14,10 @@ describe("FirstStepsApp", () => {
     const user = userEvent.setup();
 
     render(<FirstStepsApp />);
+    const xboxRow = screen.getByLabelText("Xbox Series X");
 
-    const xboxItem = screen.getByText("Xbox Series X");
+    expect(xboxRow).toBeInTheDocument();
 
-    expect(xboxItem).toBeInTheDocument();
-
-    const xboxRow = screen.getByText("Xbox Series X").closest("section");
-
-    if (!xboxRow) throw new Error('Could not find section for "Xbox Series X"');
     const deleteButton = within(xboxRow).getByRole("button", {
       name: /delete/i,
     });
@@ -35,7 +31,6 @@ describe("FirstStepsApp", () => {
     const user = userEvent.setup();
 
     render(<FirstStepsApp />);
-
     const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
 
     expect(nintendoRow).not.toBeNull();
@@ -46,12 +41,12 @@ describe("FirstStepsApp", () => {
     );
 
     await user.click(increaseButton);
+
     const quantityDisplay = within(nintendoRow as HTMLElement).getByText("2", {
       selector: ".quantity-display",
     });
 
     expect(quantityDisplay).toBeInTheDocument();
-
     expect(quantityDisplay?.textContent).toBe("2");
   });
 
@@ -62,12 +57,14 @@ describe("FirstStepsApp", () => {
     const nintendoRow = screen.getByRole("region", {
       name: /nintendo switch/i,
     });
+
     const increaseButton = within(nintendoRow).getByRole("button", {
       name: "+",
-    const decreaseButton = within(nintendoRow).getByRole("button", { name: "-" });
-    await user.click(decreaseButton);
+    });
+
     await user.click(increaseButton);
     await user.click(increaseButton);
+
     const quantityDisplay = within(nintendoRow).getByText(/^\s*3\s*$/, {
       selector: ".quantity-display",
     });
@@ -75,9 +72,11 @@ describe("FirstStepsApp", () => {
     expect(quantityDisplay).toBeInTheDocument();
     expect(quantityDisplay?.textContent).toBe("3");
 
-    const decreaseButton = nintendoRow?.querySelector("button:first-of-type");
+    const decreaseButton = within(nintendoRow).getByRole("button", {
+      name: "-",
+    });
 
-    await user.click(decreaseButton!);
+    await user.click(decreaseButton);
 
     expect(quantityDisplay?.textContent).toBe("2");
   });
