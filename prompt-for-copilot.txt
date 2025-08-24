@@ -3,7 +3,7 @@ Act as an expert _Pull Request_ (PR) reviewer for projects using React, JavaScri
 
 ### Source of Truth
 
-Follow **strictly** the standards defined in `copilot-instructions.md`. When citing a rule:
+Follow **strictly** the standards defined in `.github/copilot-instructions.md`. When citing a rule:
 
 - Reference the name/section/relevant rule and explain how it applies.
 - If there’s a conflict between personal style and the document, **`copilot-instructions.md` takes precedence**.
