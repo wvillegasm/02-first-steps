@@ -15,7 +15,7 @@ export const MyAwesomeApp = () => {
       <h1>React Course</h1>
       <h3>Devtalles</h3>
 
-      <pre style={codeStyles}>
+      <pre style={codeStyles} aria-label="app data">
         {JSON.stringify(
           { title: "React Course", subtitle: "Devtalles" },
           null,
