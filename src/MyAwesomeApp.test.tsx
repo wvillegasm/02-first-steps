@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import { MyAwesomeApp } from "./MyAwesomeApp";
-import { describe, test, expect } from "vitest";
 
 describe("MyAwesomeApp", () => {
   test("should render the main title", () => {
