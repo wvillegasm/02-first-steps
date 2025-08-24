@@ -41,95 +41,53 @@ This is a React 19 + TypeScript + Vite educational project focused on learning R
 - Co-locate CSS files with components (e.g., `ItemCounter.tsx` + `ItemCounter.css`)
 - Use CSS classes with semantic naming (`.item-row`, `.quantity-controls`)
 - Inline styles for dynamic/computed values using CSSProperties type
-- Mobile-first responsive design with flexbox layouts
 
-## Development Workflow
+## AI Coding Instructions — React First Steps (concise)
 
-### Available Scripts
+This file gives a minimal, actionable guide for AI coding agents working on this learning repo. Focus on discoverable patterns and concrete examples.
 
-- `npm run dev` - Start Vite dev server with HMR
-- `npm run build` - TypeScript compilation + Vite production build
-- `npm run lint` - ESLint with React hooks and TypeScript rules
-- `npm run preview` - Preview production build locally
+### Big picture
 
-### File Organization
+- Entry: `src/main.tsx` → `FirstStepsApp` composes `src/components/*` (co-located CSS).
+- Parent lifts state (see `FirstStepsApp.tsx` product list). Child `ItemCounter` receives callbacks for quantity and delete.
 
-```
-src/
-├── main.tsx              # App entry point
-├── FirstStepsApp.tsx     # Main app component
-├── MyAwesomeApp.tsx      # Example/homework component
-└── components/
-    ├── ItemCounter.tsx   # Stateful counter with callbacks
-    ├── ItemCounter.css
-    ├── UserCard.tsx      # Simple display component
-    └── UserCard.css
-```
+### Key files to read first
 
-### Component Communication
+- `src/FirstStepsApp.tsx` — state + handlers (`handleQuantityChange`, `handleDeleteItem`).
+- `src/components/ItemCounter.tsx` — props interface, guard clauses, UI controls.
+- `src/helpers/*` — utility functions (must have JSDoc).
+- `vite.config.ts`, `vitest.config.ts`, `tsconfig.app.json`, `tsconfig.test.json` — build/test wiring.
 
-- Parent-to-child: Props
-- Child-to-parent: Callback functions passed as props
-- Prevent negative values with guard clauses in event handlers
-- Use descriptive callback names: `onQuantityChange`, `onHandleQuantity`
+### Concrete conventions (do exactly)
 
-## Project-Specific Conventions
+- Use PascalCase components and named exports: `export const Foo: React.FC<Props> = () => {}`.
+- Define prop interfaces above the component; prefer `import type` for types.
+- State updates must be immutable: prefer `setState(prev => prev.map(...) | prev.filter(...))`.
+- Validate inputs in handlers (e.g., prevent negative quantities).
+- All utility functions require JSDoc with `@param`, `@returns`, `@throws`, and `@example`.
 
-### Educational Context
+### Testing & TypeScript rules
 
-- This is a learning project - prioritize clarity and optimization
-- Homework assignments in `homeworks/` directory provide component requirements
-- Components should demonstrate specific React concepts (state, props, event handling)
+- Tests use Vitest. `vitest.config.ts` enables `globals: true` and references `tsconfig.test.json`.
+- Keep test types out of the app build: `tsconfig.app.json` excludes `**/*.test.*` and `tsconfig.test.json` includes `vitest/globals`.
+- Run tests: `npm run test` (watch) or `npm run test -- --run` for CI.
 
-### ESLint Configuration
+### Examples
 
-- Uses TypeScript ESLint with React hooks rules
-- React Refresh plugin for Vite HMR compatibility
-- Configured for browser globals and ES2022 features
+- Parent handler (FirstStepsApp):
+  `const handleDeleteItem = (name: string) => setProductItems(prev => prev.filter(i => i.name !== name));`
+- Child prop (ItemCounter):
+  `interface ItemCounterProps { name:string; quantity:number; onQuantityChange:(n:string,d:number)=>void; onDeleteItem:(n:string)=>void }`
 
-### Build System
+### Pull request & change-report workflow
 
-- Vite with SWC for fast TypeScript compilation and React refresh
-- TypeScript project references: separate configs for app (`tsconfig.app.json`) and Node (`tsconfig.node.json`)
-- ESNext modules with bundler resolution for modern tooling
+- Use `git diff main` to collect changes.
+- Add a `changes/feature-*.md` file with: Summary, Breaking changes, File-by-file details, Testing checklist, Reviewers.
 
-## Common Patterns to Follow
+### Quick checks before finishing a change
 
-1. Always define prop interfaces before component declaration
-2. Use functional components with hooks (no class components)
-3. Implement guard clauses for edge cases (negative quantities, etc.)
-4. Prefer controlled components with explicit state management
-5. Use semantic HTML elements (`<section>`, `<button>`) for accessibility
-6. **Document all utility functions** with comprehensive JSDoc including examples and parameter descriptions
+1. `npm run lint` — ESLint rules
+2. `npm run test -- --run` — unit tests
+3. `npm run build` — TypeScript + Vite build
 
-## AI Coding Instructions for Pull Request Generation
-
-### The Process
-
-The instructions outline a clear, two-step process:
-
-1.  **Analyze Branch Changes**: This is the discovery phase. The assistant is instructed to use a specific Git command (`git diff main...`) to compare the current branch with the `main` branch. This command identifies every single line of code that has been added, removed, or modified. The purpose is to gather all the raw data about the changes.
-
-2.  **Generate the Pull Request Description**: This is the reporting phase. After analyzing the changes, the assistant must format that information into a predefined template. This ensures that the context, details, and verification steps for the changes are presented in a structured way.
-
-3.  **File for Changes Report**: Create the changes report inside of the `changes/tracking-changes.md` file.
-
----
-
-### The Pull Request Template
-
-1.  **File for Pull Request Description**: Create a new file in the `changes/` directory with a name that reflects the changes made (e.g., `changes/feature-xyz.md`).
-
-The template is broken down into several sections, each with a specific purpose:
-
-- **📝 Summary**: A high-level overview. This section answers the "why" behind the PR. It explains the purpose of the changes, linking them to a specific feature or bug fix (e.g., `Fixes #123`).
-
-- **💥 Breaking Changes**: A critical alert section. It forces the developer to declare if their changes might break other parts of the application, which is vital information for reviewers.
-
-- **✨ Changes Details**: The core of the report. This provides a file-by-file breakdown of what was changed and why. It allows reviewers to quickly understand the scope and logic of the modifications before diving into the code itself.
-
-- **🖼️ Screenshots / GIFs**: Visual evidence. For any changes that affect the user interface, this section provides visual proof of what the changes look like, which is often clearer than a text description.
-
-- **✅ Testing**: A quality assurance checklist. It confirms what kind of testing was performed to ensure the changes work correctly and don't introduce new bugs.
-
-- **👀 Reviewers**: A call to action. It suggests which team members should review the code, helping to streamline the review process.
+If anything is unclear, ask for the specific file or area to inspect and I will update these instructions.

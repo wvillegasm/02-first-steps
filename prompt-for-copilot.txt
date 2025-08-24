@@ -1,0 +1,265 @@
+---- PROMPT TEMPLATE BEGIN ----
+Act as an expert _Pull Request_ (PR) reviewer for projects using React, JavaScript, Node.js, and TypeScript (check the current project and optimize the role base on all relevant context). Review **only** the changes introduced in the current branch **compared against** the `develop` branch (diff-driven review), if `develop` branch does not exist use `main` branch instead. **Ignore** any files/lines untouched in this comparison. If the PR contains formatting noise/renames that make the review harder, point it out and request splitting into separate PRs.
+
+### Source of Truth
+
+Follow **strictly** the standards defined in `.github/copilot-instructions.md`. When citing a rule:
+
+- Reference the name/section/relevant rule and explain how it applies.
+- If there’s a conflict between personal style and the document, **`copilot-instructions.md` takes precedence**.
+
+### Scope and Quality Criteria
+
+Evaluate changes with focus on:
+
+1. **Functional correctness and architectural consistency**
+
+   - The solution fulfills the PR’s goal and respects module/layer boundaries.
+   - APIs/contracts/DTOs maintain compatibility or include migrations/feature flags.
+
+2. **TypeScript**
+
+   - Avoid `any`, `as unknown as`, `@ts-ignore`. Prefer precise types, properly parameterized generics, discriminated unions, and exhaustiveness checks with `never`.
+   - Correct narrowing, null/undefined safety, justified use of `Pick/Partial/Readonly`.
+
+3. **React (Frontend)**
+
+   - Small, reusable components with clear names; props typed properly (`Props`/`FC` only if justified).
+   - Stable keys in lists, correct hook dependencies, `useMemo/useCallback` only when performance impact is real.
+   - Avoid unnecessary re-renders; memoization where needed; safe cleanup in effects.
+   - Accessibility (roles/aria/labels), keyboard/focus handling, semantic HTML.
+   - Performance and bundle size: tree-shaking, code splitting (`dynamic import`), avoid heavy dependencies.
+
+4. **Node.js (Backend)**
+
+   - Input validation (e.g., zod/joi), correct HTTP codes, centralized error handling.
+   - OWASP security: injection, XSS/SSRF, CSRF (if applicable), rate limiting, sanitization, secrets via env.
+   - Idempotency where required, timeouts, retries with backoff, concurrency/transactions handled properly.
+
+5. **Testing**
+
+   - Coverage for new/changed logic (unit + integration where relevant). React Testing Library/Jest/Vitest.
+   - Edge cases, error paths, loading/empty states. Mocks/fakes isolated.
+
+6. **Observability & DX**
+
+   - Useful logs without leaking PII, metrics/alerts where needed. Commit/PR messages clear.
+   - Documentation updated (README/CHANGELOG) when the change affects users or deployment.
+
+7. **Maintainability**
+
+   - Reasonable cyclomatic complexity, small functions, DRY/KISS. Dead code removed.
+   - Dependencies checked (risk/licenses/lighter alternatives preferred).
+
+### What NOT to do
+
+- Do not comment on areas/files untouched in the diff against `develop`.
+- Do not enforce personal style preferences if `copilot-instructions.md` defines them.
+- Do not approve PRs mixing concerns (refactor + feature + formatting) without justification.
+
+### Review Process
+
+1. **Context**: Read title, description, linked issue, checklist, and deployment notes.
+2. **Change Map**: Summarize modules/files touched and type of change (feature/fix/refactor/test/config).
+3. **Checklist-driven review** (see below), citing rules from `copilot-instructions.md`.
+4. **Risks & missing tests**: List plausible regressions and how to test them.
+5. **Verdict**: _Approve_, _Approve with non-blocking comments_, or _Request changes_.
+
+### Output Format (mandatory)
+
+Provide the review structured as follows:
+
+- **Summary**: 2–5 lines on what the PR does and overall status.
+- **Change Map**: brief list of files/areas touched.
+- **Comments**
+
+  - **Blocking**: …
+  - **Improvement**: …
+  - **Nit**: …
+  - **Question**: …
+  - When possible, include applicable code suggestions:
+
+    ```suggestion
+    // Proposed change in diff
+    ```
+
+- **Recommended Tests**: missing cases to cover.
+- **Risks & Mitigations**: brief risk → mitigation/monitoring matrix.
+- **Checklist** (mark ✅/❌ and cite `copilot-instructions.md` rule where relevant):
+
+  - Strict TS typing
+  - Basic accessibility in touched UI
+  - Error & state handling (loading/empty/error)
+  - Security (validation/sanitization/secrets)
+  - Performance/bundle impact (if applicable)
+  - Tests/coverage for new logic
+  - Documentation/CHANGELOG
+  - Compatibility & feature flags (if applicable)
+
+- **Verdict**: _Approve_ | _Approve with comments_ | _Request changes_
+
+### High-Quality Heuristics
+
+- Prefer minimal, directly applicable examples tied to the diff.
+- Highlight trade-offs (e.g., readability vs performance) and justify recommendations.
+- If touched code contains pre-existing smells, suggest scoped follow-ups (non-blocking) with effort estimate.
+- If the PR is overloaded, suggest splitting into smaller PRs guided by atomic commits.
+
+Your goal is a safe, traceable merge aligned with `copilot-instructions.md`, maximizing quality without blocking team flow.
+
+Do not give me any response yet, only validate that you understand the role assigned to you.
+---- PROMPT TEMPLATE END ----
+
+### CONTEXTO LOCAL (autogenerado)
+PR_URL: LOCAL_BRANCH:feature/fix-unit-testing-global
+PR_HEAD: feature/fix-unit-testing-global
+PR_BASE: main
+
+### FILES_CHANGED
+src/FirstStepsApp.test.tsx
+src/MyAwesomeApp.test.tsx
+tsconfig.test.json
+
+### COMMITS
+bbe0054  1 fix(test): include jest-dom types in tsconfig  2 Resolves an issue where TypeScript could not find the type definitions for `@testing-library/jest-dom` matchers like `toBeInTheDocument`.
+
+### DIFF (truncated to 800 lines)
+diff --git a/src/FirstStepsApp.test.tsx b/src/FirstStepsApp.test.tsx
+index 09f8d54..0e0a795 100644
+--- a/src/FirstStepsApp.test.tsx
++++ b/src/FirstStepsApp.test.tsx
+@@ -1,7 +1,6 @@
+ import { render, screen, within } from "@testing-library/react";
+ import userEvent from "@testing-library/user-event";
+ import { FirstStepsApp } from "./FirstStepsApp";
+-import { describe, test, expect } from "vitest";
+ 
+ describe("FirstStepsApp", () => {
+   test("should render all initial product items", () => {
+@@ -20,7 +19,9 @@ describe("FirstStepsApp", () => {
+ 
+     const xboxRow = screen.getByText("Xbox Series X").closest("section");
+     if (!xboxRow) throw new Error('Could not find section for "Xbox Series X"');
+-    const deleteButton = within(xboxRow).getByRole('button', { name: /delete/i });
++    const deleteButton = within(xboxRow).getByRole("button", {
++      name: /delete/i,
++    });
+     await user.click(deleteButton);
+ 
+     expect(screen.queryByText("Xbox Series X")).not.toBeInTheDocument();
+@@ -33,28 +34,38 @@ describe("FirstStepsApp", () => {
+     const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
+     expect(nintendoRow).not.toBeNull();
+ 
+-    const increaseButton = within(nintendoRow as HTMLElement).getByRole('button', { name: '+' });
++    const increaseButton = within(nintendoRow as HTMLElement).getByRole(
++      "button",
++      { name: "+" }
++    );
+     await user.click(increaseButton);
+-    const quantityDisplay = within(nintendoRow as HTMLElement).getByText("2", { selector: '.quantity-display' });
++    const quantityDisplay = within(nintendoRow as HTMLElement).getByText("2", {
++      selector: ".quantity-display",
++    });
+     expect(quantityDisplay).toBeInTheDocument();
+ 
+     expect(quantityDisplay?.textContent).toBe("2");
+-
+   });
+ 
+   test("should decrease item quantity when '-' button is clicked", async () => {
+     const user = userEvent.setup();
+     render(<FirstStepsApp />);
+-    const nintendoRow = screen.getByRole('region', { name: /nintendo switch/i });
+-    const increaseButton = within(nintendoRow).getByRole('button', { name: '+' });
++    const nintendoRow = screen.getByRole("region", {
++      name: /nintendo switch/i,
++    });
++    const increaseButton = within(nintendoRow).getByRole("button", {
++      name: "+",
++    });
+     await user.click(increaseButton);
+     await user.click(increaseButton);
+-    const quantityDisplay = within(nintendoRow).getByText(/^\s*3\s*$/, { selector: '.quantity-display' });
++    const quantityDisplay = within(nintendoRow).getByText(/^\s*3\s*$/, {
++      selector: ".quantity-display",
++    });
+     expect(quantityDisplay).toBeInTheDocument();
+     expect(quantityDisplay?.textContent).toBe("3");
+ 
+     const decreaseButton = nintendoRow?.querySelector("button:first-of-type");
+-    await user.click(decreaseButton!)
++    await user.click(decreaseButton!);
+ 
+     expect(quantityDisplay?.textContent).toBe("2");
+   });
+@@ -62,14 +73,14 @@ describe("FirstStepsApp", () => {
+   test("should not allow quantity to go below zero", async () => {
+     const user = userEvent.setup();
+     render(<FirstStepsApp />);
+-    
++
+     const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
+     const quantityDisplay = nintendoRow?.querySelector(".quantity-display");
+     expect(quantityDisplay?.textContent).toBe("1");
+ 
+     const decreaseButton = nintendoRow?.querySelector("button:first-of-type");
+-    await user.click(decreaseButton!)
+-    await user.click(decreaseButton!)
++    await user.click(decreaseButton!);
++    await user.click(decreaseButton!);
+ 
+     expect(quantityDisplay?.textContent).toBe("0");
+   });
+diff --git a/src/MyAwesomeApp.test.tsx b/src/MyAwesomeApp.test.tsx
+index b4367a0..4e04547 100644
+--- a/src/MyAwesomeApp.test.tsx
++++ b/src/MyAwesomeApp.test.tsx
+@@ -1,6 +1,5 @@
+ import { render, screen } from "@testing-library/react";
+ import { MyAwesomeApp } from "./MyAwesomeApp";
+-import { describe, test, expect } from "vitest";
+ 
+ describe("MyAwesomeApp", () => {
+   test("should render the main title", () => {
+diff --git a/tsconfig.test.json b/tsconfig.test.json
+index 1c83d0e..708124e 100644
+--- a/tsconfig.test.json
++++ b/tsconfig.test.json
+@@ -1,7 +1,7 @@
+ {
+   "extends": "./tsconfig.app.json",
+   "compilerOptions": {
+-    "types": ["vitest/globals"],
++    "types": ["vitest/globals", "@testing-library/jest-dom"],
+     "noEmit": true
+   },
+   "include": [
+
+### TEST OUTPUT (truncated)
+
+> first-steps@0.0.0 test
+> vitest --run --silent
+
+
+ RUN  v3.2.4 /media/wilfredo/applications/proj/react/fh/2025-edition/02-first-steps
+
+ ✓ src/helpers/math.helpers.test.ts (9 tests) 6ms
+ ✓ src/MyAwesomeApp.test.tsx (3 tests) 73ms
+ ✓ src/FirstStepsApp.test.tsx (5 tests) 236ms
+
+ Test Files  3 passed (3)
+      Tests  17 passed (17)
+   Start at  13:46:05
+   Duration  1.20s (transform 81ms, setup 214ms, collect 303ms, tests 314ms, environment 1.33s, prepare 306ms)
+
+### BUILD OUTPUT (truncated)
+vite v7.1.1 building for production...
+transforming...
+✓ 32 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:  0.30 kB
+dist/assets/index-C93bPzab.css    1.28 kB │ gzip:  0.56 kB
+dist/assets/index-sGc_Wgyz.js   188.60 kB │ gzip: 59.41 kB
+✓ built in 810ms
