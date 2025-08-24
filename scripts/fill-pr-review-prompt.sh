@@ -5,30 +5,33 @@ set -euo pipefail
 # Output the repository prompt template then append local metadata (files, commits, diff, test/build snippets).
 # Usage: ./scripts/fill-pr-review-prompt.sh > prompt-for-copilot.txt
 
-# Determine a sensible base branch: prefer develop, then main.
+# Determine current branch
 BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
 if [ -z "$BRANCH" ]; then
   echo "Error: cannot determine current git branch" >&2
   exit 1
 fi
 
-# Check if develop branch exists on remote, otherwise default to main
+# Choose a reasonable target branch to compare against (prefer develop -> main)
 if git ls-remote --exit-code origin develop >/dev/null 2>&1; then
   TARGET_BRANCH="develop"
 else
   TARGET_BRANCH="main"
-  BASE="$(git merge-base --fork-point HEAD origin/main 2>/dev/null)"
-  if [ -z "$BASE" ]; then
-    echo "Error: cannot determine a common ancestor with origin/main" >&2
-    exit 1
-  fi
+fi
 
-# Get the best common ancestor as the base for comparison
-BASE=$(git merge-base HEAD "origin/$TARGET_BRANCH" 2>/dev/null)
-
+# Resolve a merge-base between HEAD and the remote target branch; fall back to the ref name
+BASE_REF="origin/$TARGET_BRANCH"
+BASE="$(git merge-base HEAD "$BASE_REF" 2>/dev/null || true)"
 if [ -z "$BASE" ]; then
-  echo "Error: cannot determine a merge base with 'origin/$TARGET_BRANCH'" >&2
-  exit 1
+  # fallback to local TARGET_BRANCH if origin/$TARGET_BRANCH doesn't exist locally
+  if git show-ref --verify --quiet "refs/heads/$TARGET_BRANCH"; then
+    BASE_REF="$TARGET_BRANCH"
+  fi
+  # try merge-base again, otherwise use the ref name directly for diffs
+  BASE="$(git merge-base HEAD "$BASE_REF" 2>/dev/null || true)"
+  if [ -z "$BASE" ]; then
+    BASE="$BASE_REF"
+  fi
 fi
 
 TEMPLATE=".github/pr-reviewer-prompt.md"
