@@ -15,6 +15,7 @@ describe("MyAwesomeApp", () => {
   test("should render the JSON object in a <pre> tag", () => {
     render(<MyAwesomeApp />);
     const preElement = screen.getByLabelText(/app data/i);
+
     expect(preElement).toHaveTextContent(/"title":\s*"React Course"/);
     expect(preElement).toHaveTextContent(/"subtitle":\s*"Devtalles"/);
   });
