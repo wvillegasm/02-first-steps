@@ -86,16 +86,24 @@ describe("FirstStepsApp", () => {
 
     render(<FirstStepsApp />);
 
-    const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
-    const quantityDisplay = nintendoRow?.querySelector(".quantity-display");
+    const nintendoRow = screen.getByRole("region", {
+      name: /nintendo switch/i,
+    });
 
-    expect(quantityDisplay?.textContent).toBe("1");
+    const quantityDisplay = within(nintendoRow).getByText("1", {
+      selector: ".quantity-display",
+    });
 
-    const decreaseButton = nintendoRow?.querySelector("button:first-of-type");
+    expect(quantityDisplay).toBeInTheDocument();
+    expect(quantityDisplay.textContent).toBe("1");
 
-    await user.click(decreaseButton!);
-    await user.click(decreaseButton!);
+    const decreaseButton = within(nintendoRow).getByRole("button", {
+      name: "-",
+    });
 
-    expect(quantityDisplay?.textContent).toBe("0");
+    await user.click(decreaseButton);
+    await user.click(decreaseButton);
+
+    expect(quantityDisplay.textContent).toBe("0");
   });
 });
