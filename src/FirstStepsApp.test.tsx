@@ -64,8 +64,8 @@ describe("FirstStepsApp", () => {
     });
     const increaseButton = within(nintendoRow).getByRole("button", {
       name: "+",
-    });
-
+    const decreaseButton = within(nintendoRow).getByRole("button", { name: "-" });
+    await user.click(decreaseButton);
     await user.click(increaseButton);
     await user.click(increaseButton);
     const quantityDisplay = within(nintendoRow).getByText(/^\s*3\s*$/, {
