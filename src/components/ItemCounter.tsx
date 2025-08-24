@@ -20,7 +20,7 @@ export const ItemCounter: React.FC<ItemCounterProps> = ({
   };
 
   return (
-    <section className="item-row">
+    <section className="item-row" aria-label={name}>
       {/* Image would go here */}
       <div className="item-details">
         <span className="item-text">{name}</span>
