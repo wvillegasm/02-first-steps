@@ -40,8 +40,8 @@ describe("FirstStepsApp", () => {
       name: "+",
     });
     await user.click(increaseButton);
-    const quantityDisplay = within(nintendoRow).getByText("2", {
-      selector: ".quantity-display",
+    const quantityDisplay = within(nintendoRow).getByRole("status", {
+      name: /quantity/i,
     });
     expect(quantityDisplay).toBeInTheDocument();
     expect(quantityDisplay.textContent).toBe("2");
