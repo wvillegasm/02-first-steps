@@ -3,19 +3,24 @@ import userEvent from "@testing-library/user-event";
 import { FirstStepsApp } from "./FirstStepsApp";
 
 describe("FirstStepsApp", () => {
-  test("should render all initial product items", () => {
+  test("renders all initial product items", () => {
     render(<FirstStepsApp />);
-    expect(screen.getByText("Nintendo Switch")).toBeInTheDocument();
-    expect(screen.getByText("Xbox Series X")).toBeInTheDocument();
-    expect(screen.getByText("PlayStation 5")).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: /nintendo switch/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: /xbox series x/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: /playstation 5/i })
+    ).toBeInTheDocument();
   });
 
-  test("should delete an item when delete button is clicked", async () => {
+  test("deletes an item when delete button is clicked", async () => {
     const user = userEvent.setup();
 
     render(<FirstStepsApp />);
-    const xboxRow = screen.getByLabelText("Xbox Series X");
-
+    const xboxRow = screen.getByRole("region", { name: /xbox series x/i });
     expect(xboxRow).toBeInTheDocument();
 
     const deleteButton = within(xboxRow).getByRole("button", {
@@ -24,36 +29,38 @@ describe("FirstStepsApp", () => {
 
     await user.click(deleteButton);
 
-    expect(screen.queryByText("Xbox Series X")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("region", { name: /xbox series x/i })
+    ).not.toBeInTheDocument();
   });
 
-  test("should increase item quantity when '+' button is clicked", async () => {
+  test("increases item quantity when '+' button is clicked", async () => {
     const user = userEvent.setup();
 
     render(<FirstStepsApp />);
-    const nintendoRow = screen.getByText("Nintendo Switch").closest("section");
 
-    expect(nintendoRow).not.toBeNull();
+    const nintendoRow = screen.getByRole("region", {
+      name: /nintendo switch/i,
+    });
 
-    const increaseButton = within(nintendoRow as HTMLElement).getByRole(
-      "button",
-      { name: "+" }
-    );
+    const increaseButton = within(nintendoRow).getByRole("button", {
+      name: "+",
+    });
 
     await user.click(increaseButton);
 
-    const quantityDisplay = within(nintendoRow as HTMLElement).getByText("2", {
-      selector: ".quantity-display",
+    const quantityDisplay = within(nintendoRow).getByRole("status", {
+      name: /quantity/i,
     });
 
     expect(quantityDisplay).toBeInTheDocument();
-    expect(quantityDisplay?.textContent).toBe("2");
+    expect(quantityDisplay.textContent).toBe("2");
   });
 
-  test("should decrease item quantity when '-' button is clicked", async () => {
+  test("decreases item quantity when '-' button is clicked", async () => {
     const user = userEvent.setup();
-
     render(<FirstStepsApp />);
+
     const nintendoRow = screen.getByRole("region", {
       name: /nintendo switch/i,
     });
@@ -64,24 +71,22 @@ describe("FirstStepsApp", () => {
 
     await user.click(increaseButton);
     await user.click(increaseButton);
-
-    const quantityDisplay = within(nintendoRow).getByText(/^\s*3\s*$/, {
+    const quantityDisplay = within(nintendoRow).getByText("3", {
       selector: ".quantity-display",
     });
 
     expect(quantityDisplay).toBeInTheDocument();
-    expect(quantityDisplay?.textContent).toBe("3");
+    expect(quantityDisplay.textContent).toBe("3");
 
     const decreaseButton = within(nintendoRow).getByRole("button", {
       name: "-",
     });
 
     await user.click(decreaseButton);
-
-    expect(quantityDisplay?.textContent).toBe("2");
+    expect(quantityDisplay.textContent).toBe("2");
   });
 
-  test("should not allow quantity to go below zero", async () => {
+  test("does not allow quantity to go below zero", async () => {
     const user = userEvent.setup();
 
     render(<FirstStepsApp />);
@@ -103,7 +108,6 @@ describe("FirstStepsApp", () => {
 
     await user.click(decreaseButton);
     await user.click(decreaseButton);
-
     expect(quantityDisplay.textContent).toBe("0");
   });
 });
