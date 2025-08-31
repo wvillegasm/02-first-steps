@@ -8,9 +8,9 @@ interface ItemCounterProps {
   onDeleteItem: (name: string) => void;
 }
 
-const mockItemCounter = vi.fn((props: ItemCounterProps) => (
-  <div data-testid="item-counter" />
-));
+const mockItemCounter: React.FC<ItemCounterProps> = vi.fn(
+  (props: ItemCounterProps) => <div data-testid="item-counter" />
+);
 
 vi.mock("./components/ItemCounter", () => ({
   ItemCounter: (props: ItemCounterProps) => mockItemCounter(props),
