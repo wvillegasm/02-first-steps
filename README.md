@@ -82,6 +82,8 @@ Vitest provides a built-in `vi` object for mocking, which is compatible with Jes
 
 ```tsx
 import { render, screen } from "@testing-library/react";
+import { vi } from "vitest";
+
 import { FirstStepsApp } from "./FirstStepsApp";
 
 // Create a mock function for the ItemCounter component
@@ -134,6 +136,7 @@ describe("FirstStepsApp", () => {
 ```
 
 **Key Concepts:**
+
 - **`vi.fn()`**: Creates a spy, a function that records information about its calls.
 - **`vi.mock()`**: Replaces a module with a mock implementation. The factory function returns the mocked module's exports.
 - **`vi.clearAllMocks()`**: Resets the `mock.calls` and `mock.instances` properties of all spies.
@@ -146,6 +149,8 @@ Jest's mocking API is nearly identical to Vitest's. Simply replace `vi` with `je
 
 ```tsx
 import { render, screen } from "@testing-library/react";
+import { jest } from "jest";
+
 import { FirstStepsApp } from "./FirstStepsApp";
 
 // Create a mock function for the ItemCounter component
@@ -196,6 +201,7 @@ describe("FirstStepsApp", () => {
 ```
 
 **Key Concepts:**
+
 - **`jest.fn()`**: Equivalent to `vi.fn()`.
 - **`jest.mock()`**: Equivalent to `vi.mock()`.
 - **`jest.clearAllMocks()`**: Equivalent to `vi.clearAllMocks()`.
@@ -207,11 +213,13 @@ describe("FirstStepsApp", () => {
 Mocha does not have a built-in mocking library. A common choice is to use **Sinon** for spies and stubs and **Proxyquire** for module mocking.
 
 First, install the dependencies:
+
 ```bash
 npm install --save-dev sinon proxyquire chai @types/sinon @types/chai
 ```
 
 Then, write the test:
+
 ```tsx
 import { render, screen } from "@testing-library/react";
 import { expect } from "chai";
@@ -267,6 +275,7 @@ describe("FirstStepsApp", () => {
 ```
 
 **Key Concepts:**
+
 - **`sinon.spy()`**: Creates a spy to track function calls.
 - **`proxyquire`**: Allows you to override `require()` dependencies for the module you are testing.
 - **`chai`**: An assertion library commonly used with Mocha.
@@ -278,11 +287,13 @@ describe("FirstStepsApp", () => {
 Mocking ES Modules is more complex. A library like **`mock-import`** can be used.
 
 First, install the dependencies:
+
 ```bash
 npm install --save-dev sinon mock-import chai @types/sinon @types/chai
 ```
 
 Then, write the test:
+
 ```tsx
 import { render, screen } from "@testing-library/react";
 import { expect } from "chai";
@@ -296,10 +307,9 @@ const mockItemCounter = sinon.spy((_props: unknown) => (
 ));
 
 // Mock the import before FirstStepsApp is imported
-mockImport(
-  "./components/ItemCounter",
-  { ItemCounter: (props: unknown) => mockItemCounter(props) }
-);
+mockImport("./components/ItemCounter", {
+  ItemCounter: (props: unknown) => mockItemCounter(props),
+});
 
 // Dynamically import the module under test after setting up the mock
 const { FirstStepsApp } = await import("../src/FirstStepsApp");
@@ -342,6 +352,7 @@ describe("FirstStepsApp", () => {
 ```
 
 **Key Concepts:**
+
 - **`mock-import`**: Intercepts ES module imports and replaces them with mocks.
-- **Dynamic `import()`**: The module being tested must be imported *after* the mock is configured.
+- **Dynamic `import()`**: The module being tested must be imported _after_ the mock is configured.
 - **`stopAll()`**: A cleanup function from `mock-import` to remove all active mocks.

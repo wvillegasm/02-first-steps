@@ -28,7 +28,6 @@ describe("FirstStepsApp", () => {
 
     render(<FirstStepsApp />);
 
-    screen.debug();
     expect(mockItemCounter).toHaveBeenCalledTimes(3);
 
     expectedProps.forEach((element, idx) => {

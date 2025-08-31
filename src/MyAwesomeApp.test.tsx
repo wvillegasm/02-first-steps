@@ -37,6 +37,6 @@ describe("MyAwesomeApp", () => {
     expect(cityInput).toBeInTheDocument();
 
     const h1 = screen.getByTestId("last-name");
-    expect(h1.innerHTML).toContain("Villalobos");
+    expect(h1).toHaveTextContent("Villalobos");
   });
 });
