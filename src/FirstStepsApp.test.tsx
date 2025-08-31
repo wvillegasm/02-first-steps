@@ -49,9 +49,9 @@ describe("FirstStepsApp", () => {
 
     await user.click(increaseButton);
 
-    const quantityDisplay = within(nintendoRow).getByRole("status", {
-      name: /quantity/i,
-    });
+    const quantityDisplay = within(nintendoRow).getByLabelText(
+      "Quantity of Nintendo Switch: 2"
+    );
 
     expect(quantityDisplay).toBeInTheDocument();
     expect(quantityDisplay.textContent).toBe("2");
@@ -61,9 +61,7 @@ describe("FirstStepsApp", () => {
     const user = userEvent.setup();
     render(<FirstStepsApp />);
 
-    const nintendoRow = screen.getByRole("region", {
-      name: /nintendo switch/i,
-    });
+    const nintendoRow = screen.getByLabelText("Nintendo Switch");
 
     const increaseButton = within(nintendoRow).getByRole("button", {
       name: "+",

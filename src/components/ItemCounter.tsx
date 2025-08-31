@@ -32,7 +32,13 @@ export const ItemCounter: React.FC<ItemCounterProps> = ({
             >
               -
             </button>
-            <span className="quantity-display">{quantity}</span>
+            <span
+              className="quantity-display"
+              aria-label={`Quantity of ${name}: ${quantity}`}
+              aria-live="polite"
+            >
+              {quantity}
+            </span>
             <button
               className="quantity-btn"
               onClick={() => onHandleQuantity(1)}
