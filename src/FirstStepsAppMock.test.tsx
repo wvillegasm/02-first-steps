@@ -8,7 +8,8 @@ interface ItemCounterProps {
   onDeleteItem: (name: string) => void;
 }
 
-const mockItemCounter = vi.fn((_props: ItemCounterProps) => (
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const mockItemCounter = vi.fn((props: ItemCounterProps) => (
   <div data-testid="item-counter" />
 ));
 
