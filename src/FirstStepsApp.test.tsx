@@ -61,7 +61,9 @@ describe("FirstStepsApp", () => {
     const user = userEvent.setup();
     render(<FirstStepsApp />);
 
-    const nintendoRow = screen.getByLabelText("Nintendo Switch");
+    const nintendoRow = screen.getByRole("region", {
+      name: /nintendo switch/i,
+    });
 
     const increaseButton = within(nintendoRow).getByRole("button", {
       name: "+",

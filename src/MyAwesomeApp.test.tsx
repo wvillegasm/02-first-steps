@@ -23,7 +23,11 @@ describe("MyAwesomeApp", () => {
   test("should have a form with street and city inputs", () => {
     render(<MyAwesomeApp />);
 
-    const billingAddress = screen.getByLabelText(/billing address/i);
+    const billingAddress = screen.getByRole("group", {
+      name: /billing address/i,
+    });
+
+    expect(billingAddress).toBeInTheDocument();
 
     expect(within(billingAddress).getByText(/street:/i)).toBeInTheDocument();
 
