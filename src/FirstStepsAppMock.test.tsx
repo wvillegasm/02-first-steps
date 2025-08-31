@@ -1,12 +1,19 @@
 import { render, screen } from "@testing-library/react";
 import { FirstStepsApp } from "./FirstStepsApp";
 
-const mockItemCounter = vi.fn((_props: unknown) => (
+interface ItemCounterProps {
+  name: string;
+  quantity: number;
+  onQuantityChange: (name: string, delta: number) => void;
+  onDeleteItem: (name: string) => void;
+}
+
+const mockItemCounter = vi.fn((_props: ItemCounterProps) => (
   <div data-testid="item-counter" />
 ));
 
 vi.mock("./components/ItemCounter", () => ({
-  ItemCounter: (props: unknown) => mockItemCounter(props),
+  ItemCounter: (props: ItemCounterProps) => mockItemCounter(props),
 }));
 
 describe("FirstStepsApp", () => {
