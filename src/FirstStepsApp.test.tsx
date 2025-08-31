@@ -21,6 +21,7 @@ describe("FirstStepsApp", () => {
 
     render(<FirstStepsApp />);
     const xboxRow = screen.getByRole("region", { name: /xbox series x/i });
+
     expect(xboxRow).toBeInTheDocument();
 
     const deleteButton = within(xboxRow).getByRole("button", {
@@ -49,9 +50,9 @@ describe("FirstStepsApp", () => {
 
     await user.click(increaseButton);
 
-    const quantityDisplay = within(nintendoRow).getByRole("status", {
-      name: /quantity/i,
-    });
+    const quantityDisplay = within(nintendoRow).getByLabelText(
+      "Quantity of Nintendo Switch: 2"
+    );
 
     expect(quantityDisplay).toBeInTheDocument();
     expect(quantityDisplay.textContent).toBe("2");
@@ -59,6 +60,7 @@ describe("FirstStepsApp", () => {
 
   test("decreases item quantity when '-' button is clicked", async () => {
     const user = userEvent.setup();
+
     render(<FirstStepsApp />);
 
     const nintendoRow = screen.getByRole("region", {

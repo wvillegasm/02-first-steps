@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MyAwesomeApp } from "./MyAwesomeApp";
 
 describe("MyAwesomeApp", () => {
@@ -18,5 +18,30 @@ describe("MyAwesomeApp", () => {
 
     expect(preElement).toHaveTextContent(/"title":\s*"React Course"/);
     expect(preElement).toHaveTextContent(/"subtitle":\s*"Devtalles"/);
+  });
+
+  test("should have a form with street and city inputs", () => {
+    render(<MyAwesomeApp />);
+
+    const billingAddress = screen.getByRole("group", {
+      name: /billing address/i,
+    });
+
+    expect(billingAddress).toBeInTheDocument();
+
+    expect(within(billingAddress).getByText(/street:/i)).toBeInTheDocument();
+
+    const streetInput = screen.getByLabelText(/street:/i);
+    const cityInput = screen.getByLabelText(/city:/i);
+
+    expect(streetInput).toBeInTheDocument();
+    expect(streetInput).toHaveAttribute("type", "text");
+    expect(streetInput).toHaveAttribute("id", "street");
+
+    expect(cityInput).toBeInTheDocument();
+
+    const h1 = screen.getByTestId("last-name");
+
+    expect(h1).toHaveTextContent("Villalobos");
   });
 });
