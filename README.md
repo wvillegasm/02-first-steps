@@ -82,18 +82,24 @@ Vitest provides a built-in `vi` object for mocking, which is compatible with Jes
 
 ```tsx
 import { render, screen } from "@testing-library/react";
-import { vi } from "vitest";
-
 import { FirstStepsApp } from "./FirstStepsApp";
 
+// Define the props for the mocked component
+interface ItemCounterProps {
+  name: string;
+  quantity: number;
+  onQuantityChange: (name: string, delta: number) => void;
+  onDeleteItem: (name: string) => void;
+}
+
 // Create a mock function for the ItemCounter component
-const mockItemCounter = vi.fn((_props: unknown) => (
+const mockItemCounter = vi.fn((props: ItemCounterProps) => (
   <div data-testid="item-counter" />
 ));
 
 // Mock the entire module that exports ItemCounter
 vi.mock("./components/ItemCounter", () => ({
-  ItemCounter: (props: unknown) => mockItemCounter(props),
+  ItemCounter: (props: ItemCounterProps) => mockItemCounter(props),
 }));
 
 describe("FirstStepsApp", () => {
@@ -102,7 +108,7 @@ describe("FirstStepsApp", () => {
     vi.clearAllMocks();
   });
 
-  test("should render three item counters", () => {
+  test("should render three times", () => {
     render(<FirstStepsApp />);
     expect(screen.getAllByTestId("item-counter")).toHaveLength(3);
   });
@@ -149,18 +155,24 @@ Jest's mocking API is nearly identical to Vitest's. Simply replace `vi` with `je
 
 ```tsx
 import { render, screen } from "@testing-library/react";
-import { jest } from "jest";
-
 import { FirstStepsApp } from "./FirstStepsApp";
 
+// Define the props for the mocked component
+interface ItemCounterProps {
+  name: string;
+  quantity: number;
+  onQuantityChange: (name: string, delta: number) => void;
+  onDeleteItem: (name: string) => void;
+}
+
 // Create a mock function for the ItemCounter component
-const mockItemCounter = jest.fn((_props: unknown) => (
+const mockItemCounter = jest.fn((props: ItemCounterProps) => (
   <div data-testid="item-counter" />
 ));
 
 // Mock the entire module that exports ItemCounter
 jest.mock("./components/ItemCounter", () => ({
-  ItemCounter: (props: unknown) => mockItemCounter(props),
+  ItemCounter: (props: ItemCounterProps) => mockItemCounter(props),
 }));
 
 describe("FirstStepsApp", () => {
@@ -169,7 +181,7 @@ describe("FirstStepsApp", () => {
     jest.clearAllMocks();
   });
 
-  test("should render three item counters", () => {
+  test("should render three times", () => {
     render(<FirstStepsApp />);
     expect(screen.getAllByTestId("item-counter")).toHaveLength(3);
   });
@@ -227,15 +239,23 @@ import proxyquire from "proxyquire";
 import sinon from "sinon";
 import React from "react";
 
+// Define the props for the mocked component
+interface ItemCounterProps {
+  name: string;
+  quantity: number;
+  onQuantityChange: (name: string, delta: number) => void;
+  onDeleteItem: (name: string) => void;
+}
+
 // Create a Sinon spy for the ItemCounter component
-const mockItemCounter = sinon.spy((_props: unknown) => (
+const mockItemCounter = sinon.spy((props: ItemCounterProps) => (
   <div data-testid="item-counter" />
 ));
 
 // Use Proxyquire to import FirstStepsApp with a mocked ItemCounter
 const { FirstStepsApp } = proxyquire("../src/FirstStepsApp", {
   "./components/ItemCounter": {
-    ItemCounter: (props: unknown) => mockItemCounter(props),
+    ItemCounter: (props: ItemCounterProps) => mockItemCounter(props),
   },
 });
 
@@ -245,7 +265,7 @@ describe("FirstStepsApp", () => {
     mockItemCounter.resetHistory();
   });
 
-  it("should render three item counters", () => {
+  it("should render three times", () => {
     render(<FirstStepsApp />);
     expect(screen.getAllByTestId("item-counter")).to.have.lengthOf(3);
   });
@@ -301,14 +321,22 @@ import { mockImport, stopAll } from "mock-import";
 import sinon from "sinon";
 import React from "react";
 
+// Define the props for the mocked component
+interface ItemCounterProps {
+  name: string;
+  quantity: number;
+  onQuantityChange: (name: string, delta: number) => void;
+  onDeleteItem: (name: string) => void;
+}
+
 // Create a Sinon spy
-const mockItemCounter = sinon.spy((_props: unknown) => (
+const mockItemCounter = sinon.spy((props: ItemCounterProps) => (
   <div data-testid="item-counter" />
 ));
 
 // Mock the import before FirstStepsApp is imported
 mockImport("./components/ItemCounter", {
-  ItemCounter: (props: unknown) => mockItemCounter(props),
+  ItemCounter: (props: ItemCounterProps) => mockItemCounter(props),
 });
 
 // Dynamically import the module under test after setting up the mock
@@ -324,7 +352,7 @@ describe("FirstStepsApp", () => {
     stopAll();
   });
 
-  it("should render three item counters", () => {
+  it("should render three times", () => {
     render(<FirstStepsApp />);
     expect(screen.getAllByTestId("item-counter")).to.have.lengthOf(3);
   });
@@ -346,6 +374,8 @@ describe("FirstStepsApp", () => {
         name: element.name,
         quantity: element.quantity,
       });
+      expect(firstArg.onQuantityChange).to.be.a("function");
+      expect(firstArg.onDeleteItem).to.be.a("function");
     });
   });
 });
