@@ -1,17 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { FirstStepsApp } from "./FirstStepsApp";
 
-interface ItemCounterProps {
-  name: string;
-  quantity: number;
-  onQuantityChange: (name: string, delta: number) => void;
-  onDeleteItem: (name: string) => void;
-}
-
-const mockItemCounter = vi.fn((props: ItemCounterProps) => <div data-testid="item-counter" />);
+const mockItemCounter = vi.fn((_props: unknown) => (
+  <div data-testid="item-counter" />
+));
 
 vi.mock("./components/ItemCounter", () => ({
-  ItemCounter: (props: ItemCounterProps) => mockItemCounter(props),
+  ItemCounter: (props: unknown) => mockItemCounter(props),
 }));
 
 describe("FirstStepsApp", () => {
@@ -19,7 +14,7 @@ describe("FirstStepsApp", () => {
     vi.clearAllMocks();
   });
 
-  test("should render three times", () => {
+  test("should render three item counters", () => {
     render(<FirstStepsApp />);
     expect(screen.getAllByTestId("item-counter")).toHaveLength(3);
   });
