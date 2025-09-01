@@ -80,7 +80,7 @@ In this method, the mock is a simple "spy" function that doesn't replicate the c
 
 ```tsx
 // The mock is just a spy that renders a placeholder
-const mockItemCounter = vi.fn((props: ItemCounterProps) => (
+const mockItemCounter = vi.fn((_props: unknown) => (
   <div data-testid="item-counter" />
 ));
 
@@ -92,9 +92,9 @@ expect(mockItemCounter).toHaveBeenCalledWith(
 
 **Why this is the recommended practice:**
 
-*   **Focus and Isolation:** It perfectly isolates the component under test. You are testing *its* behavior (that it passes the correct props) without relying on the implementation details of its children.
-*   **Less Brittle Tests:** If the `ItemCounter` component's internal structure changes (e.g., how it displays the `name` prop), your tests for the parent component will not break. The test correctly focuses on the *contract* between the two components (the props).
-*   **Clarity of Intent:** The test clearly states, "I expect this component to call its child with these specific props."
+- **Focus and Isolation:** It perfectly isolates the component under test. You are testing _its_ behavior (that it passes the correct props) without relying on the implementation details of its children.
+- **Less Brittle Tests:** If the `ItemCounter` component's internal structure changes (e.g., how it displays the `name` prop), your tests for the parent component will not break. The test correctly focuses on the _contract_ between the two components (the props).
+- **Clarity of Intent:** The test clearly states, "I expect this component to call its child with these specific props."
 
 #### 2. The "Implementation" Approach
 
@@ -113,8 +113,8 @@ expect(screen.getByText("Nintendo Switch")).toBeInTheDocument();
 
 **Trade-offs:**
 
-*   **Pro:** The test assertions might feel more intuitive because you are interacting with the DOM, similar to how a user would.
-*   **Con:** It makes the test more brittle. If you change the implementation of the *mock* (e.g., wrap the name in a `<span>`), the test will fail, even though the component under test is behaving correctly. The test becomes coupled to the mock's implementation.
+- **Pro:** The test assertions might feel more intuitive because you are interacting with the DOM, similar to how a user would.
+- **Con:** It makes the test more brittle. If you change the implementation of the _mock_ (e.g., wrap the name in a `<span>`), the test will fail, even though the component under test is behaving correctly. The test becomes coupled to the mock's implementation.
 
 **Conclusion:**
 
