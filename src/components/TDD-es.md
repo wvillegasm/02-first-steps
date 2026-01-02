@@ -62,8 +62,6 @@ Para convencer a los desarrolladores escépticos, puedes proponer la **Pirámide
 
 **Conclusión para tu equipo:** "Hacemos mock del validador en el Caso de Uso porque no estamos testeando _si Joi funciona_, estamos testeando _qué hace nuestro negocio cuando la validación falla_. La corrección del esquema de Joi es responsabilidad de otro test".
 
-¿Te gustaría que diseñáramos un ejemplo de cómo sería ese **Test de Adaptador** para que vean cómo se complementan ambos enfoques?
-
 ---
 
 # Fundamentos de Test-Driven Development (TDD)
