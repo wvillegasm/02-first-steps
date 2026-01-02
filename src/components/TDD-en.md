@@ -50,10 +50,6 @@ Alistair Cockburn (creator of Hexagonal Architecture) emphasizes the **Boundary*
 
 ---
 
-### Would you like to see how we would structure the "Contract Test" for the Joi implementation to satisfy the developers who want to see the real validation being tested?
-
----
-
 # Foundations of Test-Driven Development (TDD)
 
 ## Why Tests Must Be Written in Isolation
